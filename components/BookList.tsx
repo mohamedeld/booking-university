@@ -1,8 +1,21 @@
+import { IBook } from "@/utils/types";
+import BookCard from "./BookCard";
 
-const BookList = () => {
+interface IProps{
+  title:string;
+  books:IBook[];
+  containerClassName?:string;
+}
+
+const BookList = ({title,books,containerClassName}:IProps) => {
   return (
-    <section>
-      <h2 className="font-bebas-neue text-4xl text-light-100">Popular Books</h2>
+    <section className={containerClassName}>
+      <h2 className="font-bebas-neue text-4xl text-light-100">{title}</h2>
+      <div className="book-list">
+        {books?.map(book=>(
+          <BookCard key={book?.title} {...book}/>
+        ))}
+      </div>
     </section>
   )
 }
