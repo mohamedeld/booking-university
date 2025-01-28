@@ -1,6 +1,7 @@
 'use client';
 
 import AuthForm from "@/components/AuthForm"
+import { signUp } from "@/lib/actions/auth";
 import { signUpSchmea } from "@/lib/validation"
 
 const SignUpPage = () => {
@@ -18,7 +19,7 @@ const SignUpPage = () => {
                     universityCard:''
                   }
                 }
-                onSubmit = {()=>{}}
+                onSubmit = {signUp}
       />
     </>
   )

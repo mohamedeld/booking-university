@@ -14,3 +14,12 @@ export interface IBook{
   summary:string;
   isLoanedBook?:boolean;
 }
+
+export interface AuthCredentiasl {
+  fullName:string;
+  email:string;
+  password:string;
+  universityId:number;
+  universityCard:string;
+  
+}

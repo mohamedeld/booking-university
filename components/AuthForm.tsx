@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultValues, FieldValues, Path, SubmitHandler, useForm, UseFormReturn } from "react-hook-form"
-import { z, ZodType } from "zod";
+import { isValid, z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUpload from "./ImageUpload";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
  
 
 interface IProps<T extends FieldValues>{
@@ -27,6 +29,8 @@ interface IProps<T extends FieldValues>{
 }
 
 const AuthForm  = <T extends FieldValues>({type,schema,defaultValues,onSubmit}:IProps<T>) => {
+  const {toast} = useToast();
+  const router = useRouter();
   const isSignIn = type === "SIGN_IN";
   const form:UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -35,10 +39,22 @@ const AuthForm  = <T extends FieldValues>({type,schema,defaultValues,onSubmit}:I
  
   // 2. Define a submit handler.
   const handleSubmit:SubmitHandler<T> =async (values)=> {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    const result = await onSubmit(values);
+    if(result?.success){
+      toast({
+        title:"Success",
+        description:isSignIn ? "login successfully" : "account created successfully"
+      })
+      router.push("/")
+    }else{
+      toast({
+        variant:"destructive",
+        description:result?.error || "Something went wrong"
+      })
+    }
   }
+
+  const {isSubmitting,isValid} = form?.formState;
 
   return (
     <div className="flex flex-col gap-4 ">
@@ -77,9 +93,9 @@ const AuthForm  = <T extends FieldValues>({type,schema,defaultValues,onSubmit}:I
             ))
           }
 
-          <Button type="submit" className="form-btn">
+          <Button type="submit" className="form-btn" disabled={isSubmitting || !isValid}>
             
-            {isSignIn ? 'Sign in' : 'Sign up'}
+            {isSubmitting ? 'Submitting' : isSignIn ? 'Sign in' : 'Sign up'}
           </Button>
         </form>
 
