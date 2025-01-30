@@ -164,7 +164,7 @@ const BookForm = ({ type, ...book }: IProps) => {
                   Primary Color
                 </FormLabel>
                 <FormControl>
-                 
+                 {/* color picker */}
                 </FormControl>
 
                 <FormMessage />
