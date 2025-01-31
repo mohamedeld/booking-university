@@ -37,3 +37,8 @@ export interface BookParams{
   totalCopies:number;
   videoUrl:string;
 }
+
+export interface BookBorrow{
+  bookId: string;
+  userId: string;
+}

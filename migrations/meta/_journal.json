@@ -15,6 +15,13 @@
       "when": 1738302548013,
       "tag": "0001_harsh_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738327847762,
+      "tag": "0002_handy_pet_avengers",
+      "breakpoints": true
     }
   ]
 }
