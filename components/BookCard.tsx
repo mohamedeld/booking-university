@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { Button } from "./ui/button"
 
-const BookCard = ({ id, title, genre, color, cover, isLoanedBook = false }: IBook) => {
+const BookCard = ({ id, title, genre, coverColor, coverUrl, isLoanedBook = false }: IBook) => {
   return (
     <li className={
       cn(
@@ -17,7 +17,7 @@ const BookCard = ({ id, title, genre, color, cover, isLoanedBook = false }: IBoo
           isLoanedBook && "w-full flex flex-col items-center"
         )
       }>
-        <BookCover coverColor={color} coverImage={cover} />
+        <BookCover coverColor={coverColor} coverImage={coverUrl} />
         <div className={
           cn(
             "mt-4",

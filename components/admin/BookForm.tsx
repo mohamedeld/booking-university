@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultValues, FieldValues, Path, SubmitHandler, useForm, UseFormReturn } from "react-hook-form"
-import { isValid, z, ZodType } from "zod";
+import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,9 @@ import { useRouter } from "next/navigation";
 import { IBook } from "@/utils/types";
 import { bookSchema } from "@/lib/validation";
 import { Textarea } from "../ui/textarea";
+import ImageUpload from "../ImageUpload";
+import ColorPicker from "../ColorPicker";
+import { createBook } from "@/lib/actions/admin/books";
 
 
 interface IProps extends Partial<IBook> {
@@ -50,10 +53,24 @@ const BookForm = ({ type, ...book }: IProps) => {
 
   // 2. Define a submit handler.
   const handleSubmit: SubmitHandler<z.infer<typeof bookSchema>> = async (values) => {
-    console.log("va ", values);
+    try{
+      const res = await createBook(values);
+      if(res?.success){
+        toast({
+          title:"Success",
+          description:"book created successfully"
+        })
+        router.push(`/admin/booking/${res?.data?.id}`)
+      }
+    }catch(error){
+      toast({
+        variant:"destructive",
+        description:error instanceof Error ? error?.message : "Something went wrong"
+      })
+    }
   }
 
-  const { isSubmitting, isValid } = form?.formState;
+  const { isSubmitting, isValid,errors } = form?.formState;
 
   return (
 
@@ -148,7 +165,7 @@ const BookForm = ({ type, ...book }: IProps) => {
                   Book Image
                 </FormLabel>
                 <FormControl>
-                 
+                <ImageUpload placeholder="Upload a Book Cover" accept="image/*" folder="books/covers" variant="dark" type="image"  onFileChange={field?.onChange} value={field?.value}/>
                 </FormControl>
 
                 <FormMessage />
@@ -164,7 +181,7 @@ const BookForm = ({ type, ...book }: IProps) => {
                   Primary Color
                 </FormLabel>
                 <FormControl>
-                 {/* color picker */}
+                 <ColorPicker value={field?.value} onPickerChange={field?.onChange}/>
                 </FormControl>
 
                 <FormMessage />
@@ -196,7 +213,7 @@ const BookForm = ({ type, ...book }: IProps) => {
                   Book Video
                 </FormLabel>
                 <FormControl>
-                 
+                <ImageUpload placeholder="Upload a Book Video" accept="video/*" folder="books/videos" variant="dark" type="video"  onFileChange={field?.onChange} value={field?.value}/>
                 </FormControl>
 
                 <FormMessage />
@@ -219,9 +236,9 @@ const BookForm = ({ type, ...book }: IProps) => {
               </FormItem>
             )}
           />
-        <Button type="submit" className="book-form_btn" disabled={isSubmitting || !isValid}>
+        <Button type="submit" className="book-form_btn text-white text-2xl " disabled={isSubmitting || !isValid}>
 
-          {isSubmitting ? 'Submitting' : 'Add Book To Library'}
+          {isSubmitting ? 'Submitting...' : 'Add Book To Library'}
         </Button>
       </form>
 
